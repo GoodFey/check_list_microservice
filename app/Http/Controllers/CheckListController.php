@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreCheckListRequest;
+use App\Http\Requests\CheckList\StoreCheckListRequest;
+use App\Http\Requests\CheckList\UpdateRequest;
 use App\Models\CheckList;
 use App\Models\CheckListItem;
 use App\Models\CheckListTag;
@@ -82,6 +83,57 @@ class CheckListController extends Controller
 
     }
 
+    public static function edit($checklistId)
+    {
+
+        $checkList = CheckList::find($checklistId);
+        $checkList->items = CheckListItem::getItems($checklistId)->toArray();
+        $checkList->tags = CheckListTag::getTags($checklistId)->toArray();
+
+        return response()->json($checkList->toArray());
+    }
 
 
+    public static function update($checklistId, UpdateRequest $request)
+    {
+
+        $data = $request->validated();
+
+
+        // Сохранение чек листа
+        $currentCheckList = CheckList::find($checklistId);
+        $currentCheckList->update([
+            'name' => $data['checklist']['name'],
+            'isOnPublish' => $data['checklist']['isOnPublish'] ? 1 : 0
+        ]);
+
+        // Сохранение пунктов чек листа, с привязкой к id текущего чек-листа
+        foreach ($data['checklist']['items'] as $item) {
+            CheckListItem::updateOrCreate(
+                ['id' => $item['item_id']], // Условие для поиска записи
+                [
+                    'text' => $item['item_text'], // Поля для обновления
+                    'check_list_id' => $currentCheckList->id,
+                ]);
+        }
+
+        // Разделение строки тегов на массив
+        $tags = array_map(function ($tag) {
+            return strtolower(trim($tag));
+        }, explode(',', $data['checklist']['tags']));
+
+
+
+        // Сохранение тегов в базе данных + cохранение таблицы чек листы - тэги (многие ко многим)
+        foreach ($tags as $tag) {
+            $currentTag = Tag::firstOrCreate(['name' => $tag]);
+            CheckListTag::updateOrCreate([
+                'tag_id' => $currentTag->id,
+                'check_list_id' => $currentCheckList->id,
+            ]);
+        }
+
+
+        return response()->json();
+    }
 }
