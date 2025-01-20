@@ -9,6 +9,7 @@ use App\Models\CheckListItem;
 use App\Models\CheckListTag;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CheckListController extends Controller
 {
@@ -16,8 +17,11 @@ class CheckListController extends Controller
     {
         $data = $request->validated();
 
+        $user = Auth::user();
+
         // Сохранение чек листа
         $currentCheckList = CheckList::create([
+            'user_id' => $user->id,
             'name' => $data['checklist']['name'],
             'isOnPublish' => $data['checklist']['isOnPublish'],
         ]);
@@ -52,7 +56,10 @@ class CheckListController extends Controller
 
     public static function index()
     {
-        $checkLists = CheckList::getCheckLists()->toArray();
+
+        $user = Auth::user();
+
+        $checkLists = CheckList::getCheckLists($user->id)->toArray();
 
         foreach ($checkLists as $checkList) {
             $checkList->items = CheckListItem::getItems($checkList->check_list_id)->toArray();
@@ -123,7 +130,6 @@ class CheckListController extends Controller
         }, explode(',', $data['checklist']['tags']));
 
 
-
         // Сохранение тегов в базе данных + cохранение таблицы чек листы - тэги (многие ко многим)
         foreach ($tags as $tag) {
             $currentTag = Tag::firstOrCreate(['name' => $tag]);
@@ -136,4 +142,32 @@ class CheckListController extends Controller
 
         return response()->json();
     }
+
+    public static function adminIndex()
+    {
+
+        $user = Auth::user();
+
+        if($user->is_admin === 1) {
+            $checkLists = CheckList::getCheckLists($user->id)->toArray();
+
+            foreach ($checkLists as $checkList) {
+                $checkList->items = CheckListItem::getItems($checkList->check_list_id)->toArray();
+                $checkList->tags = CheckListTag::getTags($checkList->check_list_id)->toArray();
+            }
+
+            return response()->json($checkLists);
+        }
+        return response()->json('unauthorized', 401);
+
+    }
+
+    public static function test()
+    {
+        $user = Auth::user();
+        dd($user);
+        return response()->json('ok');
+    }
+
+
 }

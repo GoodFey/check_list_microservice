@@ -7,13 +7,14 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
+
                 <li class="nav-item">
-                    <!-- Используйте router-link вместо стандартной ссылки -->
                     <router-link class="nav-link" to="/">Мои Чек-Листы</router-link>
                 </li>
                 <li class="nav-item">
                     <router-link class="nav-link" to="/create">Создать</router-link>
                 </li>
+
                 <li class="nav-item">
                     <router-link class="nav-link" to="/admin">Админка</router-link>
                 </li>

@@ -37,12 +37,11 @@ export default {
                     photo_url: user.photo_url,
                     username: user.username,
                 });
-                console.log(response.data);
                 const data = await response.data;
                 if (response.status >= 200 && response.status < 300) {
                     // Сохраняем токен и перенаправляем пользователя
                     localStorage.setItem('auth_token', data.token);
-                    // this.$router.push('/dashboard'); // Перенаправление на защищенную страницу
+                    this.$router.push('/'); // Перенаправление на защищенную страницу
                 } else {
                     console.error('Ошибка авторизации:', data.error);
                 }

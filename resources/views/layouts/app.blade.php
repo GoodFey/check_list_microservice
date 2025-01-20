@@ -9,11 +9,11 @@
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     @vite(['resources/js/app.js'])
 </head>
-<body >
+<body>
 
 <main id="app">
-    @include('layouts.navbar')
-
+    {{--    @include('layouts.navbar')--}}
+    <navbar-component></navbar-component>
     @yield('content')
 
     @include('layouts.footer')

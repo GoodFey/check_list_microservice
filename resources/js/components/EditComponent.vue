@@ -66,6 +66,7 @@
 <script>
 import { VueDraggable } from "vue-draggable-plus";
 import axios from "axios";
+import apiClient from "../services/apiClient.js";
 
 export default {
     components: { VueDraggable },
@@ -83,7 +84,7 @@ export default {
     methods: {
         async fetchChecklist() {
             try {
-                const response = await axios.get(`api/checklist/edit/${this.$route.params.checklistId}`)
+                const response = await apiClient.get(`/checklist/edit/${this.$route.params.checklistId}`)
                 const data = response.data;
 
                 // Инициализируем данные
@@ -112,7 +113,7 @@ export default {
                 // Преобразуем теги из строки в массив
                 this.checklist.tags = this.tagsInput
 
-                await axios.patch(`api/checklist/update/${this.$route.params.checklistId}`, {
+                await apiClient.patch(`/checklist/update/${this.$route.params.checklistId}`, {
                     checklist: this.checklist,
                 });
 

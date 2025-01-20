@@ -10,7 +10,14 @@ class CheckList extends Model
     protected $guarded = false;
     protected $table = 'check_lists';
 
-    public static function getCheckLists()
+    public static function getCheckLists($userId)
+    {
+        return DB::table('check_lists')
+            ->where('user_id', '=', $userId)
+            ->select('id as check_list_id', 'name', 'isOnPublish')
+            ->get();
+    }
+    public static function getAdminCheckLists()
     {
         return DB::table('check_lists')
             ->select('id as check_list_id', 'name', 'isOnPublish')

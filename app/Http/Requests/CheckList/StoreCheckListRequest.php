@@ -43,5 +43,4 @@ class StoreCheckListRequest extends FormRequest
             'checklist.items.*.text.max' => 'Текст каждого пункта не должен превышать 255 символов.',
         ];
     }
-
 }

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->boolean('isOnPublish')->default(false);
+            $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });
     }

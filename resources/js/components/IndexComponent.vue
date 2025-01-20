@@ -49,6 +49,8 @@
 </template>
 
 <script>
+import apiClient from "../services/apiClient.js";
+
 export default {
     name: 'IndexComponent',
     data() {
@@ -68,7 +70,7 @@ export default {
         async getCheckLists() {
             try {
                 this.loading = true;
-                const response = await axios.get('api/checklist');
+                const response = await apiClient.get('/checklist');
                 if (Array.isArray(response.data)) {
                     this.checklists = response.data.map((checklist) => ({
                         ...checklist,

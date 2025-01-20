@@ -7,7 +7,7 @@ const apiClient = axios.create({
 
 // Интерцептор для добавления токена
 apiClient.interceptors.request.use((config) => {
-    const token = localStorage.getItem('authToken'); // Берем токен из localStorage
+    const token = localStorage.getItem('auth_token'); // Берем токен из localStorage
     if (token) {
         config.headers.Authorization = `Bearer ${token}`; // Добавляем заголовок
     }

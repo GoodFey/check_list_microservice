@@ -64,6 +64,7 @@
 
 <script>
 import axios from "axios";
+import apiClient from "../services/apiClient.js";
 
 export default {
     name: "ChecklistsTable",
@@ -86,7 +87,7 @@ export default {
         async fetchChecklists() {
             try {
                 this.loading = true;
-                const response = await axios.get("/api/checklist");
+                const response = await apiClient.get("/checklist/admin");
                 this.checklists = response.data;
                 console.log('Полученные данные:', this.checklists);
             } catch (error) {
@@ -101,7 +102,7 @@ export default {
                 checklist.isOnPublish = !checklist.isOnPublish;
 
                 // Отправляем обновленное значение на сервер
-                await axios.patch(`/api/checklist/changePublish/${checklist.check_list_id}`, {
+                await apiClient.patch(`/checklist/changePublish/${checklist.check_list_id}`, {
                     'isOnPublish': checklist.isOnPublish ? 1 : 0,
                 });
 
@@ -114,7 +115,7 @@ export default {
         },
         async deleteCheckList(checklist) {
             try {
-                await axios.delete(`api/checklist/delete/${checklist.check_list_id}`)
+                await apiClient.delete(`/checklist/delete/${checklist.check_list_id}`)
                 this.fetchChecklists()
             } catch (error) {
                 console.log(error);

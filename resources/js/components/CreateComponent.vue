@@ -66,6 +66,7 @@
 <script>
 import { VueDraggable } from "vue-draggable-plus";
 import axios from "axios";
+import apiClient from "../services/apiClient.js";
 
 export default {
     components: { VueDraggable },
@@ -93,7 +94,7 @@ export default {
         },
         async saveChecklist() {
             try {
-                await axios.post('api/checklist', {
+                await apiClient.post('/checklist', {
                     'checklist': this.checklist
                 })
                 this.$router.push({name: 'index'})
